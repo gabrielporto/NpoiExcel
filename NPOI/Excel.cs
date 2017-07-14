@@ -8,6 +8,7 @@ using System.IO;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.HSSF.Extractor;
+using NPOI.HPSF;
 
 namespace NPOI
 {
@@ -50,7 +51,7 @@ namespace NPOI
                 //Achar o numero de colunas
                 for (int i = 0; i < sheet.PhysicalNumberOfRows; i++)
                 {
-                    IRow row = sheet.GetRow(i);
+                    //IRow row = sheet.GetRow(i);
                     //int cellsCont = row.Cells.Count();
 
                     if (sheet.GetRow(i) != null && sheet.GetRow(i).Cells.Count() > numeroDeColunas)
@@ -116,5 +117,40 @@ namespace NPOI
             return dt;
         }
 
+        public void SalvarDataTable(DataTable dt, string path)
+        {
+            HSSFWorkbook hssfworkbook = new HSSFWorkbook();
+
+            //Criar uma tabela em branco
+            ISheet sheet = hssfworkbook.CreateSheet();
+
+            //Colocar dados nela
+            for (int i = 0; i < dt.Rows.Count; i++)
+            {
+                sheet.CreateRow(i);
+                for (int j = 0; j < dt.Columns.Count; j++)
+                {
+                    sheet.GetRow(i).CreateCell(j).SetCellValue(dt.Rows[i][j].ToString());
+                }
+            }
+
+            hssfworkbook.CreateSheet();
+            hssfworkbook.SetSheetName(hssfworkbook.GetSheetIndex(sheet), sheet.SheetName);
+
+            ////create a entry of DocumentSummaryInformation
+            DocumentSummaryInformation dsi = PropertySetFactory.CreateDocumentSummaryInformation();
+            dsi.Company = "NPOI Team";
+            hssfworkbook.DocumentSummaryInformation = dsi;
+
+            ////create a entry of SummaryInformation
+            SummaryInformation si = PropertySetFactory.CreateSummaryInformation();
+            si.Subject = "NPOI SDK Example";
+            hssfworkbook.SummaryInformation = si;
+
+            //Write the stream data of workbook to the root directory
+            FileStream file = new FileStream(path, FileMode.Create);
+            hssfworkbook.Write(file);
+            file.Close();
+        }
     }
 }

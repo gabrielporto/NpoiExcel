@@ -30,11 +30,26 @@ namespace NPOI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            OpenFileDialog fd = new OpenFileDialog();
-            if ((fd.ShowDialog() == System.Windows.Forms.DialogResult.OK))
+            OpenFileDialog ofd = new OpenFileDialog();
+            ofd.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+            if ((ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK))
             {
                 Cursor.Current = Cursors.WaitCursor;
-                dataGridView1.DataSource = excel.GetDataTable(fd.FileName);
+                dataGridView1.DataSource = excel.GetDataTable(ofd.FileName);
+                Cursor.Current = Cursors.Default;
+            }
+
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            SaveFileDialog sfd = new SaveFileDialog();
+            sfd.Filter = "Excel Files|*.xls;*.xlsx;*.xlsm";
+            if ((sfd.ShowDialog()) == DialogResult.OK)
+            {
+                Cursor.Current = Cursors.WaitCursor;
+                excel.SalvarDataTable((DataTable)dataGridView1.DataSource, sfd.FileName);
+                Cursor.Current = Cursors.Default;
             }
 
         }
