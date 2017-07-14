@@ -7,7 +7,6 @@ using System.Data;
 using System.IO;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
-using NPOI.HSSF.Extractor;
 using NPOI.HPSF;
 
 namespace NPOI
