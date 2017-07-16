@@ -35,7 +35,7 @@ namespace NPOI
             if ((ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK))
             {
                 Cursor.Current = Cursors.WaitCursor;
-                dataGridView1.DataSource = excel.GetDataTable(ofd.FileName);
+                comboBox1.DataSource = excel.GetTabName(ofd.FileName);
                 Cursor.Current = Cursors.Default;
             }
 
@@ -52,6 +52,11 @@ namespace NPOI
                 Cursor.Current = Cursors.Default;
             }
 
+        }
+
+        private void comboBox1_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            dataGridView1.DataSource = excel.GetDataTable(null,comboBox1.SelectedValue.ToString());
         }
     }
 }

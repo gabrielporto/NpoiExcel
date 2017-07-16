@@ -30,7 +30,7 @@ namespace NPOI
             }
         }
 
-        public DataTable GetDataTable(string fileStreamPath = null)
+        public DataTable GetDataTable(string fileStreamPath = null,string nomeTable = null)
         {
             DataTable dt = new DataTable();
 
@@ -42,7 +42,19 @@ namespace NPOI
             else
             {
                 //A tabela
-                ISheet sheet = hssfworkbook.GetSheetAt(0);
+                ISheet sheet;
+
+                //caso seja null pegar a primeira tabela 
+                // pegar a tabela com o nome passado
+                if (nomeTable == null)
+                {
+                     sheet = hssfworkbook.GetSheetAt(0);
+                }
+                else
+                {
+                    sheet = hssfworkbook.GetSheet(nomeTable);
+                }
+
 
                 int numeroDeLinhas = sheet.PhysicalNumberOfRows;
                 int numeroDeColunas = 0;
@@ -114,6 +126,25 @@ namespace NPOI
                 }
             }
             return dt;
+        }
+
+        public string[] GetTabName(string fileStreamPath = null)
+        {
+            string[] nomes;
+            if (fileStreamPath != null)
+            {
+                Carregar(fileStreamPath);
+                return GetTabName();
+            }
+            else
+            {
+                nomes = new string[hssfworkbook.Count];
+                for (int i = 0; i < hssfworkbook.Count; i++)
+                {
+                    nomes[i] = hssfworkbook.GetSheetAt(i).SheetName;
+                }
+            }
+            return nomes;
         }
 
         public void SalvarDataTable(DataTable dt, string path)
